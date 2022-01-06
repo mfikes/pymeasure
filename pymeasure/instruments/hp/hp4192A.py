@@ -23,3 +23,38 @@
 #
 
 from pymeasure.instruments import Instrument
+from pymeasure.instruments.validators import truncated_range
+
+class HP4192A(Instrument):
+    """ Represents the Hewlett Packard 4192A LF Impedance Analyzer
+    and provides a high-level interface for interacting with the
+    instrument.
+    """
+
+    def __init__(self, resourceName, **kwargs):
+        super().__init__(
+            resourceName,
+            "Hewlett Packard 4192A LF Impedance Analyzer",
+            includeSCPI=False,
+            **kwargs
+        )
+
+    spot_frequency = Instrument.control(
+        "F1 FRR EX", "FR %gEN",
+        """An integer point property that controls the spot frequency in
+        hertz. Takes values between 5 and 13000000.""",
+        validator=truncated_range,
+        set_process=lambda v: v / 1000,
+        get_process=lambda v: int(float(v[2][1:]) * 1000),
+        values=[5, 13000000],
+    )
+
+    start_frequency = Instrument.control(
+        "F1 TFR EX", "TF %gEN",
+        """An integer property that controls the start frequency in
+        hertz. Takes values between 5 and 13000000.""",
+        validator=truncated_range,
+        set_process=lambda v: v / 1000,
+        get_process=lambda v: int(float(v[2][1:]) * 1000),
+        values=[5, 13000000],
+    )
