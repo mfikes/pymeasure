@@ -50,8 +50,8 @@ class TestHP4192A:
     #########################
 
     BOOLEANS = [False, True]
-    FREQUENCIES = [5, 120, 100000, 13000000]
-
+    #FREQUENCIES = [5, 5.005, 11000.2, 100000.005, 1001000.05, 13000000]
+    FREQUENCIES = [11000.2]
 
     INSTR = HP4192A(adapter.gpib(17))
 

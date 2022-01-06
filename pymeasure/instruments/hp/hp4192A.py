@@ -40,21 +40,41 @@ class HP4192A(Instrument):
         )
 
     spot_frequency = Instrument.control(
-        "F1 FRR EX", "FR %gEN",
-        """An integer point property that controls the spot frequency in
+        "F1 FRR EX", "FR %fEN",
+        """A floating point property that controls the spot frequency in
         hertz. Takes values between 5 and 13000000.""",
         validator=truncated_range,
         set_process=lambda v: v / 1000,
-        get_process=lambda v: int(float(v[2][1:]) * 1000),
+        get_process=lambda v: float(v[2][1:]) * 1000,
         values=[5, 13000000],
     )
 
     start_frequency = Instrument.control(
         "F1 TFR EX", "TF %gEN",
-        """An integer property that controls the start frequency in
+        """A floating point property that controls the start frequency in
         hertz. Takes values between 5 and 13000000.""",
         validator=truncated_range,
         set_process=lambda v: v / 1000,
-        get_process=lambda v: int(float(v[2][1:]) * 1000),
+        get_process=lambda v: float(v[2][1:]) * 1000,
         values=[5, 13000000],
+    )
+
+    stop_frequency = Instrument.control(
+        "F1 TFR EX", "TF %gEN",
+        """A floating point property that controls the stop frequency in
+        hertz. Takes values between 5 and 13000000.""",
+        validator=truncated_range,
+        set_process=lambda v: v / 1000,
+        get_process=lambda v: float(v[2][1:]) * 1000,
+        values=[5, 13000000],
+    )
+
+    step_frequency = Instrument.control(
+        "F1 TFR EX", "TF %gEN",
+        """A floating point property that controls the step frequency in
+        hertz. Takes values between 0.001 and 13000000.""",
+        validator=truncated_range,
+        set_process=lambda v: v / 1000,
+        get_process=lambda v: float(v[2][1:]) * 1000,
+        values=[0.001, 13000000],
     )
