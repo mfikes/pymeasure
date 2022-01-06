@@ -26,8 +26,10 @@ import time
 import pytest
 import math
 from pymeasure.instruments.hp.hp4192A import HP4192A
+from pymeasure.adapters import PrologixAdapter
+adapter = PrologixAdapter('/dev/cu.usbserial-PXEFMYB9', serial_timeout=1)
 
-pytest.skip('Only work with connected hardware', allow_module_level=True)
+#pytest.skip('Only work with connected hardware', allow_module_level=True)
 
 
 class TestHP4192A:
@@ -47,12 +49,11 @@ class TestHP4192A:
     # PARAMETRIZATION CASES #
     #########################
 
-    CHANNELS = [1, 2]
-    RELAYS = [1, 2, 3, 4]
     BOOLEANS = [False, True]
-    FREQUENCIES = [5, 120, 1000, 10000, 100000, 1000000, 13000000]
+    FREQUENCIES = [5, 120, 100000, 13000000]
 
-    INSTR = HP4192A(RESOURCE)
+
+    INSTR = HP4192A(adapter.gpib(17))
 
     ############
     # FIXTURES #
@@ -60,7 +61,7 @@ class TestHP4192A:
 
     @pytest.fixture
     def instr(self):
-        self.INSTR.reset()
+        #self.INSTR.reset()
         return self.INSTR
 
     #########
