@@ -94,3 +94,4 @@ class TestHP4192A:
     def test_spot_bias(self, instr, case):
         instr.spot_bias = case
         assert instr.spot_bias == case
+        instr.bias_off()

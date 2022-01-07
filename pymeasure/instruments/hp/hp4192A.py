@@ -105,3 +105,7 @@ class HP4192A(Instrument):
         get_process=__bias_get_process,
         values=[-35, 35],
     )
+
+    def bias_off(self):
+        """Turns off the DC bias. """
+        self.write("I0")
