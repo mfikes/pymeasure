@@ -24,6 +24,7 @@
 
 from pymeasure.instruments import Instrument
 from pymeasure.instruments.validators import truncated_range
+from decimal import Decimal
 
 class HP4192A(Instrument):
     """ Represents the Hewlett Packard 4192A LF Impedance Analyzer
@@ -39,23 +40,29 @@ class HP4192A(Instrument):
             **kwargs
         )
 
+    def __frequency_set_process(f):
+        return str(Decimal(f).scaleb(-3).quantize(Decimal("0.000001")))
+
+    def __frequency_get_process(v):
+        return float(Decimal(v[2][1:]).scaleb(3))
+
     spot_frequency = Instrument.control(
-        "F1 FRR EX", "FR %fEN",
+        "F1 FRR EX", "FR %gEN",
         """A floating point property that controls the spot frequency in
         hertz. Takes values between 5 and 13000000.""",
         validator=truncated_range,
-        set_process=lambda v: v / 1000,
-        get_process=lambda v: float(v[2][1:]) * 1000,
+        set_process=__frequency_set_process,
+        get_process=__frequency_get_process,
         values=[5, 13000000],
     )
 
     start_frequency = Instrument.control(
-        "F1 TFR EX", "TF %gEN",
+        "F1 TFR EX", "TF %sEN",
         """A floating point property that controls the start frequency in
         hertz. Takes values between 5 and 13000000.""",
         validator=truncated_range,
-        set_process=lambda v: v / 1000,
-        get_process=lambda v: float(v[2][1:]) * 1000,
+        set_process=__frequency_set_process,
+        get_process=__frequency_get_process,
         values=[5, 13000000],
     )
 
@@ -64,8 +71,8 @@ class HP4192A(Instrument):
         """A floating point property that controls the stop frequency in
         hertz. Takes values between 5 and 13000000.""",
         validator=truncated_range,
-        set_process=lambda v: v / 1000,
-        get_process=lambda v: float(v[2][1:]) * 1000,
+        set_process=__frequency_set_process,
+        get_process=__frequency_get_process,
         values=[5, 13000000],
     )
 
@@ -74,7 +81,7 @@ class HP4192A(Instrument):
         """A floating point property that controls the step frequency in
         hertz. Takes values between 0.001 and 13000000.""",
         validator=truncated_range,
-        set_process=lambda v: v / 1000,
-        get_process=lambda v: float(v[2][1:]) * 1000,
+        set_process=__frequency_set_process,
+        get_process=__frequency_get_process,
         values=[0.001, 13000000],
     )
