@@ -50,8 +50,8 @@ class TestHP4192A:
     #########################
 
     BOOLEANS = [False, True]
-    #FREQUENCIES = [5, 5.005, 11000.2, 100000.005, 1001000.05, 13000000]
-    FREQUENCIES = [11000.2]
+    FREQUENCIES = [5, 1234.567, 12345.67, 123456.7, 1234567, 12345670, 13000000]
+    STEP_FREQUENCIES = [1, 5, 1234.567, 12345.67, 123456.7, 1234567, 12345670, 13000000]
 
     INSTR = HP4192A(adapter.gpib(17))
 
@@ -70,10 +70,21 @@ class TestHP4192A:
 
     @pytest.mark.parametrize("case", FREQUENCIES)
     def test_spot_frequency(self, instr, case):
-        instr.spot_frequency = case
-        assert instr.spot_frequency == case
+        if case > 10000:
+            instr.spot_frequency = case
+            assert instr.spot_frequency == case
 
     @pytest.mark.parametrize("case", FREQUENCIES)
     def test_start_frequency(self, instr, case):
         instr.start_frequency = case
         assert instr.start_frequency == case
+
+    @pytest.mark.parametrize("case", FREQUENCIES)
+    def test_stop_frequency(self, instr, case):
+        instr.stop_frequency = case
+        assert instr.stop_frequency == case
+
+    @pytest.mark.parametrize("case", STEP_FREQUENCIES)
+    def test_step_frequency(self, instr, case):
+        instr.step_frequency = case
+        assert instr.step_frequency == case

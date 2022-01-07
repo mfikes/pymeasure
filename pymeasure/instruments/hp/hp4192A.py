@@ -41,13 +41,21 @@ class HP4192A(Instrument):
         )
 
     def __frequency_set_process(f):
-        return str(Decimal(f).scaleb(-3).quantize(Decimal("0.000001")))
+        if f < 10000.0:
+            resolution = Decimal('0.000001')
+        elif f < 100000.0:
+            resolution = Decimal('0.00001')
+        elif f < 1000000.0:
+            resolution = Decimal('0.0001')
+        else:
+            resolution = Decimal('0.001')
+        return str(Decimal(f).scaleb(-3).quantize(resolution))
 
     def __frequency_get_process(v):
         return float(Decimal(v[2][1:]).scaleb(3))
 
     spot_frequency = Instrument.control(
-        "F1 FRR EX", "FR %gEN",
+        "F1 FRR EX", "FR %sEN",
         """A floating point property that controls the spot frequency in
         hertz. Takes values between 5 and 13000000.""",
         validator=truncated_range,
@@ -67,7 +75,7 @@ class HP4192A(Instrument):
     )
 
     stop_frequency = Instrument.control(
-        "F1 TFR EX", "TF %gEN",
+        "F1 TFR EX", "TF %sEN",
         """A floating point property that controls the stop frequency in
         hertz. Takes values between 5 and 13000000.""",
         validator=truncated_range,
@@ -77,11 +85,11 @@ class HP4192A(Instrument):
     )
 
     step_frequency = Instrument.control(
-        "F1 TFR EX", "TF %gEN",
+        "F1 SFR EX", "SF %sEN",
         """A floating point property that controls the step frequency in
-        hertz. Takes values between 0.001 and 13000000.""",
+        hertz. Takes values between 1 and 13000000.""",
         validator=truncated_range,
         set_process=__frequency_set_process,
         get_process=__frequency_get_process,
-        values=[0.001, 13000000],
+        values=[1, 13000000],
     )
