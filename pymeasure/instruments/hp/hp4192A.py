@@ -60,7 +60,7 @@ class HP4192A(Instrument):
     spot_frequency = Instrument.control(
         "F1 FRR EX", "FR %sEN",
         """A floating point property that controls the spot frequency in
-        hertz. Takes values between 5 Hz and 13000000 Hz.""",
+        hertz. Takes values between 5 Hz and 13000000 Hz. """,
         validator=truncated_range,
         set_process=__frequency_set_process,
         get_process=__frequency_get_process,
@@ -70,7 +70,7 @@ class HP4192A(Instrument):
     start_frequency = Instrument.control(
         "F1 TFR EX", "TF %sEN",
         """A floating point property that controls the start frequency in
-        hertz. Takes values between 5 Hz and 13000000 Hz.""",
+        hertz. Takes values between 5 Hz and 13000000 Hz. """,
         validator=truncated_range,
         set_process=__frequency_set_process,
         get_process=__frequency_get_process,
@@ -80,7 +80,7 @@ class HP4192A(Instrument):
     stop_frequency = Instrument.control(
         "F1 TFR EX", "TF %sEN",
         """A floating point property that controls the stop frequency in
-        hertz. Takes values between 5 Hz and 13000000 Hz.""",
+        hertz. Takes values between 5 Hz and 13000000 Hz. """,
         validator=truncated_range,
         set_process=__frequency_set_process,
         get_process=__frequency_get_process,
@@ -90,7 +90,7 @@ class HP4192A(Instrument):
     step_frequency = Instrument.control(
         "F1 SFR EX", "SF %sEN",
         """A floating point property that controls the step frequency in
-        hertz. Takes values between 1 Hz and 13000000 Hz.""",
+        hertz. Takes values between 1 Hz and 13000000 Hz. """,
         validator=truncated_range,
         set_process=__frequency_set_process,
         get_process=__frequency_get_process,
@@ -100,7 +100,7 @@ class HP4192A(Instrument):
     spot_bias = Instrument.control(
         "F1 BIR EX", "BI %gEN",
         """A floating point property that controls the spot bias in
-        volts. Takes values between -35 V and +35 V.""",
+        volts. Takes values between -35 V and +35 V. """,
         validator=truncated_range,
         get_process=__bias_get_process,
         values=[-35, 35],
@@ -109,7 +109,7 @@ class HP4192A(Instrument):
     start_bias = Instrument.control(
         "F1 TBR EX", "TB %gEN",
         """A floating point property that controls the start bias in
-        volts. Takes values between -35 V and +35 V.""",
+        volts. Takes values between -35 V and +35 V. """,
         validator=truncated_range,
         get_process=__bias_get_process,
         values=[-35, 35],
@@ -118,7 +118,7 @@ class HP4192A(Instrument):
     stop_bias = Instrument.control(
         "F1 PBR EX", "PB %gEN",
         """A floating point property that controls the stop bias in
-        volts. Takes values between -35 V and +35 V.""",
+        volts. Takes values between -35 V and +35 V. """,
         validator=truncated_range,
         get_process=__bias_get_process,
         values=[-35, 35],
@@ -127,10 +127,22 @@ class HP4192A(Instrument):
     step_bias = Instrument.control(
         "F1 SBR EX", "SB %gEN",
         """A floating point property that controls the step bias in
-        volts. Takes values between 0.01 V and 35 V.""",
+        volts. Takes values between 0.01 V and 35 V. """,
         validator=truncated_range,
         get_process=__bias_get_process,
         values=[0.01, 35],
+    )
+
+    impedance = Instrument.measurement(
+        "F0 A2 C2 EX",
+        """Reads the complex impedance in ohms. """,
+        get_process=lambda v: complex(float(v[0][4:]), float(v[1][4:]))
+    )
+
+    admittance = Instrument.measurement(
+        "F0 A2 C3 EX",
+        """Reads the complex admittance in siemens. """,
+        get_process=lambda v: complex(float(v[0][4:]), float(v[1][4:]))
     )
 
     def bias_off(self):
