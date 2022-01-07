@@ -54,6 +54,9 @@ class HP4192A(Instrument):
     def __frequency_get_process(v):
         return float(Decimal(v[2][1:]).scaleb(3))
 
+    def __bias_get_process(v):
+        return float(v[2][1:])
+
     spot_frequency = Instrument.control(
         "F1 FRR EX", "FR %sEN",
         """A floating point property that controls the spot frequency in
@@ -92,4 +95,13 @@ class HP4192A(Instrument):
         set_process=__frequency_set_process,
         get_process=__frequency_get_process,
         values=[1, 13000000],
+    )
+
+    spot_bias = Instrument.control(
+        "F1 BIR EX", "BI %gEN",
+        """A floating point property that controls the spot bias in
+        volts. Takes values between -35 and 35.""",
+        validator=truncated_range,
+        get_process=__bias_get_process,
+        values=[-35, 35],
     )

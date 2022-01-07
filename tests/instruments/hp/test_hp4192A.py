@@ -52,6 +52,7 @@ class TestHP4192A:
     BOOLEANS = [False, True]
     FREQUENCIES = [5, 1234.567, 12345.67, 123456.7, 1234567, 12345670, 13000000]
     STEP_FREQUENCIES = [1, 5, 1234.567, 12345.67, 123456.7, 1234567, 12345670, 13000000]
+    BIASES = [-35, -0.01, 0, 0.01, 35]
 
     INSTR = HP4192A(adapter.gpib(17))
 
@@ -88,3 +89,8 @@ class TestHP4192A:
     def test_step_frequency(self, instr, case):
         instr.step_frequency = case
         assert instr.step_frequency == case
+
+    @pytest.mark.parametrize("case", BIASES)
+    def test_spot_bias(self, instr, case):
+        instr.spot_bias = case
+        assert instr.spot_bias == case
