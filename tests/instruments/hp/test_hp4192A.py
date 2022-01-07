@@ -53,6 +53,7 @@ class TestHP4192A:
     FREQUENCIES = [5, 1234.567, 12345.67, 123456.7, 1234567, 12345670, 13000000]
     STEP_FREQUENCIES = [1, 5, 1234.567, 12345.67, 123456.7, 1234567, 12345670, 13000000]
     BIASES = [-35, -0.01, 0, 0.01, 35]
+    STEP_BIASES = [0.01, 35]
 
     INSTR = HP4192A(adapter.gpib(17))
 
@@ -92,6 +93,23 @@ class TestHP4192A:
 
     @pytest.mark.parametrize("case", BIASES)
     def test_spot_bias(self, instr, case):
-        instr.spot_bias = case
-        assert instr.spot_bias == case
-        instr.bias_off()
+        try:
+            instr.spot_bias = case
+            assert instr.spot_bias == case
+        finally:
+            instr.bias_off()
+
+    @pytest.mark.parametrize("case", BIASES)
+    def test_start_bias(self, instr, case):
+        instr.start_bias = case
+        assert instr.start_bias == case
+
+    @pytest.mark.parametrize("case", BIASES)
+    def test_stop_bias(self, instr, case):
+        instr.stop_bias = case
+        assert instr.stop_bias == case
+
+    @pytest.mark.parametrize("case", STEP_BIASES)
+    def test_step_bias(self, instr, case):
+        instr.step_bias = case
+        assert instr.step_bias == case
