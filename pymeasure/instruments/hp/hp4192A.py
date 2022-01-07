@@ -136,13 +136,15 @@ class HP4192A(Instrument):
     impedance = Instrument.measurement(
         "F0 A2 C2 EX",
         """Reads the complex impedance in ohms. """,
-        get_process=lambda v: complex(float(v[0][4:]), float(v[1][4:]))
+        get_process=lambda v: complex(float(v[0][4:] if v[0][0] == 'N' else float("nan")),
+                                      float(v[1][4:] if v[1][0] == 'N' else float("nan")))
     )
 
     admittance = Instrument.measurement(
         "F0 A2 C3 EX",
         """Reads the complex admittance in siemens. """,
-        get_process=lambda v: complex(float(v[0][4:]), float(v[1][4:]))
+        get_process=lambda v: complex(float(v[0][4:] if v[0][0] == 'N' else float("nan")),
+                                      float(v[1][4:] if v[1][0] == 'N' else float("nan")))
     )
 
     def bias_off(self):
